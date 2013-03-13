@@ -15,51 +15,140 @@ return array(
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
-		'application.components.*',
+        'application.components.*',
+		'application.helpers.',
+        'ext.eoauth.*',
+        'ext.eoauth.lib.*',
+        'ext.lightopenid.*',
+        'ext.eauth.services.*',
 	),
 
 	'modules'=>array(
-		// uncomment the following to enable the Gii tool
-		/*
+
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
+			'password'=>'123',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
-		),
-		*/
+		)
 	),
 
 	// application components
 	'components'=>array(
+
+        'image'=>array(
+            'class'=>'application.extensions.image.CImageComponent',
+            // GD or ImageMagick
+            'driver'=>'GD',
+            // ImageMagick setup path
+            'params'=>array('directory'=>'/opt/local/bin')
+        ),
+        'eauth' => array(
+            'class' => 'ext.eauth.EAuth',
+            'popup' => true, // Use the popup window instead of redirecting.
+            'cache' => false, // Cache component name or false to disable cache. Defaults to 'cache'.
+            'cacheExpire' => 0, // Cache lifetime. Defaults to 0 - means unlimited.
+            'services' => array( // You can change the providers and their classes.
+                'twitter' => array(
+                    // register your app here: https://dev.twitter.com/apps/new
+                    'class' => 'TwitterOAuthService',
+                    'key' => '6SijMpzuGrB0JUne5ektA',
+                    'secret' => '9n8KnwksbZCMDXF6ioKQn2gRsWsq1NelWuKDTybk',
+                ),
+                'google_oauth' => array(
+                    // register your app here: https://code.google.com/apis/console/
+                    'class' => 'GoogleOAuthService',
+                    'client_id' => '931835246904-0sms5cno8hpmvtnv09pd5ltlrefhiu32.apps.googleusercontent.com',
+                    'client_secret' => 'qygXNlxEKnFxkYVpxm-6aefp',
+                    'title' => 'Google',
+                ),
+                'yandex_oauth' => array(
+                    // register your app here: https://oauth.yandex.ru/client/my
+                    'class' => 'YandexOAuthService',
+                    'client_id' => '6eb1de1812734e018ec01f8c078eee47',
+                    'client_secret' => 'eebfbcbb412f4853b38713d3ae201fdf',
+                    'title' => 'Yandex',
+                ),
+                'facebook' => array(
+                    // register your app here: https://developers.facebook.com/apps/
+                    'class' => 'FacebookOAuthService',
+                    'client_id' => '...',
+                    'client_secret' => '...',
+                ),
+                'linkedin' => array(
+                    // register your app here: https://www.linkedin.com/secure/developer
+                    'class' => 'LinkedinOAuthService',
+                    'key' => '...',
+                    'secret' => '...',
+                ),
+                'github' => array(
+                    // register your app here: https://github.com/settings/applications
+                    'class' => 'GitHubOAuthService',
+                    'client_id' => 'c75d3e73aa865c9bc687',
+                    'client_secret' => '97f6d84e1dcfbc64c10b5c6a83194019ad974bf2',
+                ),
+                'live' => array(
+                    // register your app here: https://manage.dev.live.com/Applications/Index
+                    'class' => 'LiveOAuthService',
+                    'client_id' => '...',
+                    'client_secret' => '...',
+                ),
+                'vkontakte' => array(
+                    // register your app here: https://vk.com/editapp?act=create&site=1
+                    'class' => 'VKontakteOAuthService',
+                    'client_id' => '3476584',
+                    'client_secret' => 'pq3nXRHcFQ0CDnDOe0kV',
+                ),
+                'mailru' => array(
+                    // register your app here: http://api.mail.ru/sites/my/add
+                    'class' => 'MailruOAuthService',
+                    'client_id' => '700649',
+                    'client_secret' => '78581a2abe5a2f5ba6015cf3ce9eaae1',
+                ),
+                'moikrug' => array(
+                    // register your app here: https://oauth.yandex.ru/client/my
+                    'class' => 'MoikrugOAuthService',
+                    'client_id' => '...',
+                    'client_secret' => '...',
+                ),
+                'odnoklassniki' => array(
+                    // register your app here: http://dev.odnoklassniki.ru/wiki/pages/viewpage.action?pageId=13992188
+                    // ... or here: http://www.odnoklassniki.ru/dk?st.cmd=appsInfoMyDevList&st._aid=Apps_Info_MyDev
+                    'class' => 'OdnoklassnikiOAuthService',
+                    'client_id' => '163533568',
+                    'client_public' => 'CBAEFQLKABABABABA',
+                    'client_secret' => '6DA08384928F84C41F864DEB',
+                    'title' => 'Odnokl.',
+                ),
+            ),
+        ),
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
-		// uncomment the following to enable URLs in path-format
-		/*
 		'urlManager'=>array(
 			'urlFormat'=>'path',
+            'showScriptName'=>false,
+            'caseSensitive'=>false,
 			'rules'=>array(
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		*/
+
+
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 		),
-		// uncomment the following to use a MySQL database
-		/*
+
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=detskiedni.ru;dbname=chertanovskaya',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => '',
+			'username' => 'tigre',
+			'password' => 'eoodpadk',
 			'charset' => 'utf8',
 		),
-		*/
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',

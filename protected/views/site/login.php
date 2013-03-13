@@ -50,4 +50,5 @@ $this->breadcrumbs=array(
 	</div>
 
 <?php $this->endWidget(); ?>
+ <?php Yii::app()->eauth->renderWidget(); ?>
 </div><!-- form -->
