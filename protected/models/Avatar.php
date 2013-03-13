@@ -9,6 +9,10 @@ class  Avatar  extends CFormModel
     {
         return Yii::getPathOfAlias('webroot') . Avatar::pathToAvatars;
     }
+    private  static function  uploadUrl()
+    {
+        return  Avatar::pathToAvatars;
+    }
     ///Имя файла аватара
     public  $name;
     /// для загрузки аватара
@@ -18,37 +22,75 @@ class  Avatar  extends CFormModel
        Yii::import('application.extensions.image.Image');
        $this->name= $name;
     }
+    public function pathToImage()
+    {
+        return Avatar::uploadpath().$this->name.".jpg";
+    }
+    public function urlToImage()
+    {
+        return Avatar::uploadUrl().$this->name.".jpg";
+    }
+    public function pathToAvatar()
+    {
+        return Avatar::uploadpath().$this->name."avatar.jpg";
+    }
+
+    public function urlToAvatar()
+    {
+        if(!$this->validate())return "upload/avatarDefault.jpg";
+        $time = filemtime($this->pathToAvatar());
+        return Avatar::uploadurl().$this->name."avatar.jpg?".$time;
+    }
+    ///загрзка фотографии для аватара
     public function upload($image)
     {
         $this->image=$image;
         $file = CUploadedFile::getInstance($this, 'image');
         if($file==null){
-            echo "ss";
             $this->addError("image","Вы не выбрали файл");
-            return;
+            return false;
         }
         try {
            $image = new Image($file->getTempName());
         } catch (Exception $e) {
            $this->addError("image","Файл не является фотографией");
-           return;
+           return false;
         }
         if($image->height<100 && $image->height<100){
             $this->addError("image","минмальный размер 100px по ширине и высоте");
-            return;
+            return false;
         }
         if($image->width>Avatar::manWidth)$image->resize(Avatar::manWidth,null);
         if($image->height>Avatar::maxHeight)$image->resize(null,Avatar::maxHeight);
-        $image->save(Avatar::uploadpath()."1.jpg");
-
-
+        $this->name=DFileHelper::getRandomFileName(Avatar::uploadpath(),"jpg");
+        $image->save($this->pathToImage());
+        $this->automaticOfCutAvatar();
+        return true;
+    }
+    ///вырезать аватар по парамтерам
+    public function cutAvatar($top,$left,$length)
+    {
+        $image =new Image($this->pathToImage());
+        $image->crop($length,$length,$top,$left);
+        $image->resize(100,100);
+        $image->save($this->pathToAvatar());
+    }
+    ///автоматически вырезать аватар
+    public function automaticOfCutAvatar()
+    {
+       $image =new Image($this->pathToImage());
+       $length= min($image->width,$image->height);
+       $top= (($image->height-$length)/2);
+       $left= (($image->width-$length)/2);
+       $this->cutAvatar($top,$left,$length);
     }
     public function validate()
     {
-
+        if($this->name==null)return false;
+        if(!file_exists($this->pathToImage()))return false;
+        if(!file_exists($this->pathToAvatar()))$this->automaticOfCutAvatar();
         parent::validate();
     }
-
 
 
 }
