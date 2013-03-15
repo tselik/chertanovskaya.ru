@@ -4,14 +4,14 @@ class  Avatar  extends CFormModel
 {
     const maxHeight = 1024;
     const manWidth  = 1024;
-    const  pathToAvatars = "/upload/avatars/";
+    const  path = "/upload/avatars/";
     private  static function  uploadpath()
     {
-        return Yii::getPathOfAlias('webroot') . Avatar::pathToAvatars;
+        return Yii::getPathOfAlias('webroot') . Avatar::path;
     }
     private  static function  uploadUrl()
     {
-        return  Avatar::pathToAvatars;
+        return  Avatar::path;
     }
     ///Имя файла аватара
     public  $name;
