@@ -57,7 +57,7 @@ class  Avatar  extends CFormModel
            return false;
         }
         if($image->height<100 && $image->height<100){
-            $this->addError("image","минмальный размер 100px по ширине и высоте");
+            $this->addError("image","минимальный размер 100 px по ширине и высоте");
             return false;
         }
         if($image->width>Avatar::manWidth)$image->resize(Avatar::manWidth,null);
@@ -67,7 +67,7 @@ class  Avatar  extends CFormModel
         $this->automaticOfCutAvatar();
         return true;
     }
-    ///вырезать аватар по парамтерам
+    ///вырезать аватар по параметрам
     public function cutAvatar($top,$left,$length)
     {
         $image =new Image($this->pathToImage());
@@ -89,7 +89,7 @@ class  Avatar  extends CFormModel
         if($this->name==null)return false;
         if(!file_exists($this->pathToImage()))return false;
         if(!file_exists($this->pathToAvatar()))$this->automaticOfCutAvatar();
-        parent::validate();
+        return parent::validate();
     }
 
 
