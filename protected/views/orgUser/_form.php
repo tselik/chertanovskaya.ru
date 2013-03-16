@@ -24,7 +24,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'access'); ?>
-		<?php echo $form->dropDownList($model,'access',OrgUser::accesses()); ?>
+		<?php echo $form->dropDownList($model,'access',OrgUser::accesses(),array("empty"=>"")); ?>
 		<?php echo $form->error($model,'access'); ?>
 	</div>
 

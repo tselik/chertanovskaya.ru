@@ -39,6 +39,11 @@ class OrgUser extends CActiveRecord
             OrgUser::AccessAdmin=>"Администратор"
         );
     }
+    public function  PositionsByOrg()
+    {
+      if($this->orgId==null)array();
+      return Position::model()->positionsByOrgId($this->orgId);
+    }
     public function  accessString()
     {
         $accesses =  OrgUser::accesses();
@@ -132,7 +137,6 @@ class OrgUser extends CActiveRecord
         // should not be searched.
 
         $criteria=new CDbCriteria;
-
         $criteria->compare('id',$this->id);
         $criteria->compare('userId',$this->userId);
         $criteria->compare('orgId',$this->orgId);
