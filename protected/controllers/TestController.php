@@ -8,6 +8,10 @@
  */
 class TestController  extends Controller
 {
+   public function actionIndex()
+   {
+    echo  in_array(11,array(1));
+   }
    public function actionAvatar()
    {
       $avatar = new Avatar();

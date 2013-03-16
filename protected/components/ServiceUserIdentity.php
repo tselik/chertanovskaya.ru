@@ -22,10 +22,22 @@ class ServiceUserIdentity extends UserIdentity {
      */
     public function authenticate() {
         if ($this->service->isAuthenticated) {
-            $this->username = $this->service->getAttribute('name');
-            $this->setState('id', $this->service->id);
-            $this->setState('name', $this->username);
-            $this->setState('service', $this->service->serviceName);
+            $criteria =new CDbCriteria();
+            $criteria->compare("authService",$this->service->serviceName);
+            $criteria->compare("authId",$this->service->id);
+            if(($user = User::model()->find($criteria))==null)
+            {
+                $user =new User();
+                $user->authId= $this->service->id;
+                $user->authService = $this->service->serviceName;
+                $user->name = $this->service->getAttribute('name');
+                $gender =  $this->service->getAttribute('gender');
+                if($gender)$user->sex = $gender==="F" ? 1  : 0;
+                if(!$user->save(false))return false;
+            }
+            $this->username = $user->name;
+            $this->setState('id', $user->id);
+            $this->setState('name', $user->name);
             $this->errorCode = self::ERROR_NONE;
         }
         else {
