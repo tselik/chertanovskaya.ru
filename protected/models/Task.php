@@ -1,23 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "position".
+ * This is the model class for table "task".
  *
- * The followings are the available columns in table 'position':
- * @property integer $id
- * @property integer $orgId
- * @property string $name
+ * The followings are the available columns in table 'task':
+ * @property integer $objectId
+ * @property integer $public
+ * @property integer $executionId
+ * @property integer $estateId
  *
  * The followings are the available model relations:
- * @property OrgUser[] $orgUsers
- * @property Org $org
+ * @property Estate $estate
+ * @property Object $object
+ * @property User $execution
  */
-class Position extends CActiveRecord
+class Task extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Position the static model class
+	 * @return Task the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -29,7 +31,7 @@ class Position extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'position';
+		return 'task';
 	}
 
 	/**
@@ -40,12 +42,11 @@ class Position extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('orgId, name', 'required'),
-			array('orgId', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>150),
+			array('objectId, public', 'required'),
+			array('objectId, public, executionId, estateId', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, orgId, name', 'safe', 'on'=>'search'),
+			array('objectId, public, executionId, estateId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,8 +58,9 @@ class Position extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'orgUsers' => array(self::HAS_MANY, 'OrgUser', 'positionId'),
-			'org' => array(self::BELONGS_TO, 'Org', 'orgId'),
+			'estate' => array(self::BELONGS_TO, 'Estate', 'estateId'),
+			'object' => array(self::BELONGS_TO, 'Object', 'objectId'),
+			'execution' => array(self::BELONGS_TO, 'User', 'executionId'),
 		);
 	}
 
@@ -68,9 +70,10 @@ class Position extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'orgId' => 'Org',
-			'name' => 'Name',
+			'objectId' => 'Object',
+			'public' => 'Public',
+			'executionId' => 'Execution',
+			'estateId' => 'Estate',
 		);
 	}
 
@@ -85,9 +88,10 @@ class Position extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('orgId',$this->orgId);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('objectId',$this->objectId);
+		$criteria->compare('public',$this->public);
+		$criteria->compare('executionId',$this->executionId);
+		$criteria->compare('estateId',$this->estateId);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -10,7 +10,11 @@ class TestController  extends Controller
 {
    public function actionIndex()
    {
-    echo  in_array(11,array(1));
+
+       $session=new CHttpSession;
+       $session->open();
+       $session->clear();
+       echo  $session->sessionID;
    }
    public function actionAvatar()
    {

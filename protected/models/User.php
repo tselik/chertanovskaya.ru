@@ -132,15 +132,6 @@ class User extends CActiveRecord
 		));
 	}
 
-    public function beforeValidate()
-    {
-       if($this->getIsNewRecord())
-       {
-           $this->dateOfCreate =  new CDbExpression('NOW()');
-       }
-       $this->dataOfUpdate = new CDbExpression('NOW()');
-       return parent::beforeValidate();
-    }
 
 
 }

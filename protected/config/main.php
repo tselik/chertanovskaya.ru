@@ -17,6 +17,7 @@ return array(
 		'application.models.*',
         'application.components.*',
 		'application.helpers.*',
+        'application.services.*',
         'ext.eoauth.*',
         'ext.eoauth.lib.*',
         'ext.lightopenid.*',

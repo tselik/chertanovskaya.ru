@@ -1,23 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "position".
+ * This is the model class for table "object".
  *
- * The followings are the available columns in table 'position':
+ * The followings are the available columns in table 'object':
  * @property integer $id
- * @property integer $orgId
+ * @property integer $typeId
+ * @property integer $creatorId
  * @property string $name
+ * @property string $dateOfCreate
+ * @property string $dateOfUpdate
  *
  * The followings are the available model relations:
- * @property OrgUser[] $orgUsers
- * @property Org $org
+ * @property User $creator
+ * @property Task $task
+ * @property Text[] $texts
  */
-class Position extends CActiveRecord
+class Object extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Position the static model class
+	 * @return Object the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -29,7 +33,7 @@ class Position extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'position';
+		return 'object';
 	}
 
 	/**
@@ -40,12 +44,13 @@ class Position extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('orgId, name', 'required'),
-			array('orgId', 'numerical', 'integerOnly'=>true),
+			array('id, typeId, creatorId, name, dateOfCreate', 'required'),
+			array('id, typeId, creatorId', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>150),
+			array('dateOfUpdate', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, orgId, name', 'safe', 'on'=>'search'),
+			array('id, typeId, creatorId, name, dateOfCreate, dateOfUpdate', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,8 +62,9 @@ class Position extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'orgUsers' => array(self::HAS_MANY, 'OrgUser', 'positionId'),
-			'org' => array(self::BELONGS_TO, 'Org', 'orgId'),
+			'creator' => array(self::BELONGS_TO, 'User', 'creatorId'),
+			'task' => array(self::HAS_ONE, 'Task', 'objectId'),
+			'texts' => array(self::HAS_MANY, 'Text', 'object_id'),
 		);
 	}
 
@@ -69,8 +75,11 @@ class Position extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'orgId' => 'Org',
+			'typeId' => 'Type',
+			'creatorId' => 'Creator',
 			'name' => 'Name',
+			'dateOfCreate' => 'Date Of Create',
+			'dateOfUpdate' => 'Date Of Update',
 		);
 	}
 
@@ -86,8 +95,11 @@ class Position extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('orgId',$this->orgId);
+		$criteria->compare('typeId',$this->typeId);
+		$criteria->compare('creatorId',$this->creatorId);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('dateOfCreate',$this->dateOfCreate,true);
+		$criteria->compare('dateOfUpdate',$this->dateOfUpdate,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
