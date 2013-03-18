@@ -20,10 +20,9 @@ class UserService
      return $user->save(false);
     }
 
-    public function update(User $user,array $data=null)
+    public function update(User $user)
     {
-       if($data==null)$data=$_REQUEST["User"];
-       $user->attributes = CArray::extract($data,array("name","sex","email"));
+       $user->attributes = CArray::extract($_REQUEST["User"],array("name","sex","email"));
        $this->dataOfUpdate = new CDbExpression('NOW()');
        $user->lastIp=$_SERVER['REMOTE_ADDR'];
        $user->save();
@@ -35,6 +34,11 @@ class UserService
         $criteria->compare("authService",$authService);
         $criteria->compare("authId",$authId);
         return User::model()->find($criteria);
+    }
+    /* @return User */
+    public function currentUser()
+    {
+       return  User::model()->findByPk(Yii::app()->user->id);
     }
 
 

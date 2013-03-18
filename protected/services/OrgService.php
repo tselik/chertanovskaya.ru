@@ -8,14 +8,14 @@
  */
 class OrgService
 {
-     public function Create(Org $org,$data)
+     public function Create(Org $org)
      {
-        $org->attributes = CArray::extract($data,array("name"));
+        $org->attributes = CArray::extract($_SERVER["Org"],array("name"));
         $org->save();
      }
-     public function Update(Org $org,$data)
+     public function Update(Org $org)
      {
-        $org->attributes = CArray::extract($data,array("name"));
+        $org->attributes = CArray::extract($_SERVER["Org"],array("name"));
         $org->save();
      }
 }

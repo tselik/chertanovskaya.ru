@@ -8,12 +8,12 @@
  */
 class TaskService
 {
-    public function create(Object $object,Task $task,$creatorId,Text $text)
+    public function create(Object $object,Task $task,User $creator,Text $text)
     {
 
         $transaction = $object->dbConnection->beginTransaction();
         $object->attributes = CArray::extract($_REQUEST["Object"],array("name"));
-        $object->creatorId=$creatorId;
+        $object->creatorId=$creator->id;
         $object->typeId=1;
         $object->dateOfCreate=new CDbExpression('NOW()');
         if($object->save())

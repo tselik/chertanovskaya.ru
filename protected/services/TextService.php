@@ -8,10 +8,10 @@
  */
 class TextService
 {
-    public function create(Text $text,$creatorId)
+    public function create(Text $text,User $creator)
     {
        $text->dateOfCreate=new CDbExpression('NOW()');
-       $text->creatorId= $creatorId;
+       $text->creatorId= $creator->id;
        $text->attributes=attributes = CArray::extract($_REQUEST["Text"],array("value","objectId"));
        $text->save();
     }
